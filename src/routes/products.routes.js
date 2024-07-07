@@ -13,5 +13,7 @@ productsRoutes.put("/:id", ProductController.atualizar.bind(ProductController));
 
 productsRoutes.delete("/:id", ProductController.deletar.bind(ProductController));
 
+productsRoutes.get("/category/:name", ProductController.listarComDetalhes.bind(ProductController));
+
 
 module.exports = productsRoutes;

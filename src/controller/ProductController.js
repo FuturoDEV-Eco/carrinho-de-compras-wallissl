@@ -49,6 +49,40 @@ class ProductController extends Database{
         }
     }
 
+    async listarComDetalhes(request, response) {
+        try {
+            const nomeCategoria = request.params.name;
+            const produtos = await this.database.query(`
+                SELECT 
+                    p.id AS product_id,
+                    p.name AS product_name,
+                    p.amount,
+                    p.color,
+                    p.voltage,
+                    p.description,
+                    c.id AS category_id,
+                    c.name AS category_name
+                FROM 
+                    products p
+                INNER JOIN 
+                    categories c
+                ON 
+                    p.category_id = c.id
+                WHERE 
+                    c.name = $1
+            `, [nomeCategoria]);
+
+            if (produtos.rowCount === 0) {
+                return response.status(404).json({ mensagem: 'Nenhum produto encontrado para essa categoria' });
+            }
+
+            response.json(produtos.rows);
+        } catch (erro) {
+            response.status(500).json({ mensagem: 'Não foi possível listar os produtos por categoria!' });
+        }
+    }
+
+
 
     async cadastrar(request, response){
 
